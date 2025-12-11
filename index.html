@@ -231,7 +231,8 @@
 
     <div class="viz-frame">
       <iframe src="viz_scurve_tech.html"
-              style="height: 1100px; width: 100% ; overflow: visible;">
+              class="tall-frame"
+              style="width: 100% ; overflow: visible;">
               title="S-curve panel for energy tech"></iframe>
     </div>
 
@@ -411,55 +412,65 @@
   J Wong, G Gulati, N Wible — DS4200, Fall '25
 </footer>
 
-<!--  tab log for d3  -->
+<!--  tabs, d3 fix, iframe height/scroll fx  -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const sections = document.querySelectorAll("main .section");
-  const navLinks = document.querySelectorAll(".nav-links a");
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll("main .section");
+  const links = document.querySelectorAll(".nav-links a");
+  const frames = document.querySelectorAll(".viz-frame iframe");
 
-  function showSection(id) {
-    sections.forEach(section => {
-      section.classList.toggle("active-section", section.id === id);
+  // resize iframe height for viz content size
+  function resize(frame) {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const h = doc.documentElement.scrollHeight;
+
+      frame.style.height = `${(h || 0) + 20}px`;
+
+    } catch (err) {
+      console.error("resize bad", err);
+    }
+  }
+
+  // section and highlight nav
+  function show(id) {
+    tabs.forEach(tab => tab.classList.toggle("active-section", tab.id === id));
+    links.forEach(link => {
+      const target = link.hash.slice(1);
+      link.classList.toggle("active", target === id);
     });
-
-    navLinks.forEach(link => {
-      const linkId = link.getAttribute("href").replace("#", "");
-      link.classList.toggle("active", linkId === id);
-    });
-
     window.location.hash = id;
+    document.getElementById(id)?.querySelectorAll("iframe").forEach(resize);
   }
 
-  // nav
-  for (let i = 0; i < navLinks.length; i++) {
-    navLinks[i].addEventListener("click", function (e) {
-      e.preventDefault();
-      const target = this.getAttribute("href").split("#")[1];
-      if (target) showSection(target);
-    });
-  }
+  // nav clicks
+  for (const link of links) {
+  link.onclick = e => {
+    e.preventDefault();
+    show(link.hash.slice(1));
+  };
+}
 
-  // init sect(hash fb)
-  const hash = window.location.hash ? window.location.hash.slice(1) : "introduction";
-  const defaultId = document.getElementById(hash) ? hash : "introduction";
-  showSection(defaultId);
+  // init section
+  const init = location.hash.slice(1) || "introduction";
+  show(document.getElementById(init) ? init : "introduction");
 
-  // patch for D3 bg
-  const d3Map = document.querySelector("iframe.d3-frame");
-  if (d3Map) {
-    d3Map.onload = function () {
+  // resize all frames after pg load
+  frames.forEach(f => f.addEventListener("load", () => resize(f)));
+
+  // fix background color f or D3 map
+  const d3 = document.querySelector("iframe.d3-frame");
+  if (d3) {
+    d3.addEventListener("load", () => {
       try {
-        const innerDoc = d3Map.contentDocument || d3Map.contentWindow.document;
-        if (innerDoc && innerDoc.body) {
-          innerDoc.body.style.background = "#fff";
-          innerDoc.body.style.color = "#111";
-          const svg = innerDoc.querySelector("svg");
-          if (svg) svg.style.background = "#fff";
-        }
+        const doc = d3.contentDocument || d3.contentWindow.document;
+        doc.body.style.background = "#fff";
+        doc.body.style.color = "#111";
+        doc.querySelector("svg")?.style.setProperty("background", "#fff");
       } catch (err) {
-        console.log("iframe restyle error:", err);
+        console.error("style fx bad", err);
       }
-    };
+    });
   }
 });
 </script>

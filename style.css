@@ -1,4 +1,4 @@
-/* root theme */
+/* green-blue-theme */
 :root {
   --bg: #0b1120;
   --bg-light: #1c2331;
@@ -18,18 +18,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font);
-  background: radial-gradient(circle at top, #0b1120 0%, #0b1120 100%);
+  background: radial-gradient(circle at top, #0b1120, #0b1120);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
 }
 
-/* typograph */
+/* typography */
 a {
   color: var(--accent);
   text-decoration: none;
 }
-
 a:hover {
   text-decoration: underline;
 }
@@ -46,7 +45,7 @@ code {
   border-radius: 0.25rem;
 }
 
-/* page lay */
+/* pg lay */
 header {
   position: sticky;
   top: 0;
@@ -81,11 +80,9 @@ header {
   border-bottom: 2px solid transparent;
   padding-bottom: 0.15rem;
 }
-
 .nav-links a:hover {
   color: var(--text);
 }
-
 .nav-links a.active {
   color: var(--accent);
   border-bottom-color: var(--accent-bg);
@@ -97,7 +94,7 @@ header {
   padding: 0 1.5rem;
 }
 
-/* tabs */
+/* tabs/section */
 .section {
   display: none;
   background: var(--bg-light);
@@ -106,22 +103,19 @@ header {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
-
 .section.active-section {
   display: block;
 }
-
 .section h1 {
   margin-top: 0;
   font-size: 1.6rem;
 }
-
 .section h2 {
   margin-top: 0;
   font-size: 1.25rem;
 }
 
-/* chp for plt type */
+/* plotly/py/altair chps */
 .muted {
   color: var(--muted);
   font-size: 0.88rem;
@@ -142,26 +136,25 @@ header {
   color: var(--muted);
   background: var(--bg);
 }
-
 .chip.accent {
   background: var(--accent-bg);
   border-color: var(--accent-bg);
   color: var(--accent);
 }
 
+/* grids */
 .grid-2 {
   display: grid;
   grid-template-columns: 2fr 1.4fr;
   gap: 1.5rem;
 }
-
 @media (max-width: 900px) {
   .grid-2 {
     grid-template-columns: 1fr;
   }
 }
 
-/* graph frames */
+/* viz frames for pres */
 .viz-frame {
   background: var(--bg-light);
   border: 1px solid var(--border);
@@ -169,20 +162,21 @@ header {
   overflow: hidden;
   margin-top: 0.75rem;
 }
-
 .viz-frame iframe {
   width: 100%;
-  height: 950px;
-  min-height: 650px;
+  border: none;
+  display: block;
+}
+.viz-frame iframe.tall-frame {
+  height: 900px;
+}
+.viz-frame iframe.d3-frame {
+  width: 100%;
   border: none;
   display: block;
 }
 
-.viz-frame iframe.d3-frame {
-  height: 800px;
-  min-height: 600px;
-}
-
+/* note */
 .note {
   font-size: 0.86rem;
   color: var(--muted);
@@ -191,12 +185,11 @@ header {
   margin-top: 0.75rem;
 }
 
-/* tighten paragraphs/list */
+/* lsits */
 ul.tight,
 ol.tight {
   padding-left: 1.25rem;
 }
-
 ul.tight li,
 ol.tight li {
   margin-bottom: 0.35rem;
